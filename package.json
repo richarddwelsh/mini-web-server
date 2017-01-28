@@ -9,6 +9,7 @@
   "author": "Richard Welsh",
   "license": "ISC",
   "dependencies": {
+    "connect-ssi": "^1.1.1",
     "express": "^4.14.0"
   }
 }

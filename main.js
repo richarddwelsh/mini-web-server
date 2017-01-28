@@ -1,7 +1,13 @@
 /* global __dirname */
 
-var express = require('express')
-var app = express()
+var express = require('express');
+var app = express();
+
+var connectSSI = require('connect-ssi');
+app.use(connectSSI({
+	baseDir: __dirname + "/../public_html",
+	ext: '.shtml'
+}))
 
 var staticRoot = __dirname + "/../public_html"
 var port = 8001
