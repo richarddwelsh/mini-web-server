@@ -13,9 +13,9 @@ app.use(connectSSI({
 }))
 
 // respond with Custom message when a GET request is made to the homepage
-// app.get('/', function (req, res) {
-//   res.send('Serving from' + staticRoot)
-// })
+app.get('/', function (req, res) {
+  res.send('Serving from' + staticRoot)
+})
 
 app.use(function(req, res, next){
 	console.log('%s %s', req.method, req.url);
