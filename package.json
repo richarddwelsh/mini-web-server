@@ -9,7 +9,9 @@
   "author": "Richard Welsh",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "connect-ssi": "^1.1.1",
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "mjml": "^3.3.5"
   }
 }
