@@ -3,19 +3,19 @@
 var express = require('express');
 var app = express();
 
+var staticRoot = __dirname + "/../webroot"
+var port = 8001
+
 var connectSSI = require('connect-ssi');
 app.use(connectSSI({
-	baseDir: __dirname + "/../public_html",
+	baseDir: staticRoot,
 	ext: '.shtml'
 }))
 
-var staticRoot = __dirname + "/../public_html"
-var port = 8001
-
 // respond with Custom message when a GET request is made to the homepage
-app.get('/', function (req, res) {
-  res.send('Serving from' + staticRoot)
-})
+// app.get('/', function (req, res) {
+//   res.send('Serving from' + staticRoot)
+// })
 
 app.use(function(req, res, next){
 	console.log('%s %s', req.method, req.url);
