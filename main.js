@@ -48,3 +48,6 @@ app.use(express.static(staticRoot));
 app.listen(port);
 
 console.log("Server running on port " + port + ", serving static files from " + staticRoot);
+
+var open = require("open");
+open("http://localhost:" + port + "/MjmlTool.html")
