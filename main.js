@@ -5,8 +5,15 @@ var app = express();
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.text({type: "text/xml"})); // body-parser will treat incoming text/xml bodies as plain text
+app.use(bodyParser.urlencoded()); 
 
 var mjml = require('mjml');
+
+var nodemailer = require('nodemailer');
+var PASSWD_DIR = (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/.credentials/';
+var PASSWD_PATH = PASSWD_DIR + 'smtp_credentials.json';
+var fs = require('fs');
+var transporter = nodemailer.createTransport(JSON.parse(fs.readFileSync(PASSWD_PATH)));
 
 var staticRoot = __dirname + "/webroot"
 var port = 8001
@@ -36,6 +43,19 @@ app.post('/Mjml2Html', function (req, res) {
 	}
 
 	res.send(resultingHtml);
+})
+
+app.post('/SendTest', function (req, res, next) {
+	var emailOut = req.body;
+	emailOut.from = "Dev <dev@welshdesign.co.uk>";
+
+	transporter.sendMail(emailOut)
+	.then(
+		response => {
+			res.send(response)
+		},
+		next
+	)
 })
 
 app.use(function(req, res, next){

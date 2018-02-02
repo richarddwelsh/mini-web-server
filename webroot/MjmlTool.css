@@ -12,17 +12,25 @@ body {
     height: 600px;
 }
 
-.errors {
-    border: 1px solid rgba(255, 0, 0, 0.267);
-    color: rgb(172, 0, 0);
+.errors, .log {
     padding: 0.3em 0.5em;
     font-family: monospace;
     margin-top: 15px;
     border-radius: 4px;
 }
 
-.errors p {
-    margin: 0;
+.errors {
+    border: 1px solid rgba(255, 0, 0, 0.267);
+    color: rgb(172, 0, 0);
+}
+
+.log {
+    border: 1px solid rgba(13, 151, 79, 0.59);
+    color: #009688;
+}
+
+.errors p, .log p {
+    margin: 1em 0.7em;
 }
 
 iframe {

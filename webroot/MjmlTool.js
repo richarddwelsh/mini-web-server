@@ -1,4 +1,4 @@
-var mjmlEditor, htmlEditor, htmlPreview, errors;
+var mjmlEditor, htmlEditor, htmlPreview, errors, latestHtml;
 
 $(document).ready(function() {
     mjmlEditor = ace.edit($("#mjmlEditor .editor")[0]);
@@ -18,6 +18,23 @@ $(document).ready(function() {
     htmlEditor.getSession().setUseWrapMode(true);
     htmlEditor.setReadOnly(true);
 
+    $("#submit").on("click", function(){
+        $.post({
+            url: "/SendTest",
+            data: {
+                to: $("#to").val(),
+                subject: $("#subject").val() + " " + new Date(),
+                html: latestHtml
+            },
+            success: function(responseObj) {
+                console.log(responseObj);
+                log.empty();
+                log.append($("<p>" + responseObj.response + "<br/>" + responseObj.messageId + "</p>"))
+            },
+            dataType: "json", // what is expected in return
+        })
+    })
+
     $.get("/HelloWorld.mjml", null, function(responseText) {
         mjmlEditor.setValue(responseText);
         mjmlEditor.gotoLine(1)
@@ -25,6 +42,7 @@ $(document).ready(function() {
 
     htmlPreview = $("#htmlPreview iframe")
     errors = $("#mjmlEditor .errors")
+    log = $("#htmlPreview .log")
 })
 
 function doTransform() {
@@ -34,13 +52,14 @@ function doTransform() {
         contentType: "text/xml",
         dataType: "json", // what is expected in return
         success: function(responseObj) {
-            console.log(responseObj);
+            // console.log(responseObj);
 
             if (responseObj.html) {
-                htmlEditor.setValue(responseObj.html);
+                latestHtml = responseObj.html;
+                htmlEditor.setValue(latestHtml);
                 htmlEditor.selection.clearSelection();
 
-                populateIframe(responseObj.html, htmlPreview)
+                populateIframe(latestHtml, htmlPreview)
             }
 
             // handle & show errors here
