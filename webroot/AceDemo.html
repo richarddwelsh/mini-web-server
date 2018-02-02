@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ACE in Action</title>
+<style type="text/css" media="screen">
+    #editor { 
+        width: 80%;
+        height: 10em;
+    }
+</style>
+</head>
+<body>
+
+<div id="editor">&lt;mjml>
+    &lt;mj-head>
+    &lt;/mj-head>
+&lt;/mjml>    
+</div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/xml");
+</script>
+</body>
+</html>

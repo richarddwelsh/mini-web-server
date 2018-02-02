@@ -8,7 +8,7 @@ app.use(bodyParser.text({type: "text/xml"})); // body-parser will treat incoming
 
 var mjml = require('mjml');
 
-var staticRoot = __dirname + "/../webroot"
+var staticRoot = __dirname + "/webroot"
 var port = 8001
 
 var connectSSI = require('connect-ssi');

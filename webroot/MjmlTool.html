@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>MJML Tool</title>
+        <link rel="stylesheet" href="./MjmlTool.css" />
+    </head>
+    <body>
+
+        <div id="container">
+            <div class="panel" id="mjmlEditor">
+                <div class="editor">&lt;!--> put some MJML here --></div>
+                <div class="errors"></div>
+            </div>
+            <div class="panel" id="htmlEditor">
+                <div class="editor">&lt;!DOCTYPE html></div>
+            </div>
+            <div class="panel" id="htmlPreview">
+                <iframe></iframe>
+            </div>
+        </div>
+            
+        <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js" charset="utf-8"></script>
+        <script src="./MjmlTool.js"></script>
+    </body>
+</html>
