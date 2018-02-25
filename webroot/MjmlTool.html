@@ -5,21 +5,31 @@
         <link rel="stylesheet" href="./MjmlTool.css" />
     </head>
     <body>
-
+        <div id="load-form">
+            <input id="filename" value="welcome.mjml" />
+            <input type="submit" id="load-submit" value="Load" />
+            <input type="submit" id="save-submit" value="Save" />
+        </div>
+        <hr/>
         <div id="container">
-            <div class="panel" id="mjmlEditor">
-                <div class="editor">&lt;!--> put some MJML here --></div>
-                <div class="errors"></div>
-            </div>
+            <div class="panel">
+                <div id="mjmlEditor">
+                    <div class="editor">&lt;!--> put some MJML here --></div>
+                    <div class="errors"></div>
+                </div>
+                <div id="jsonEditor">
+                    <div class="editor"></div>
+                </div>
+                </div>
             <div class="panel" id="htmlEditor">
                 <div class="editor">&lt;!DOCTYPE html></div>
             </div>
             <div class="panel" id="htmlPreview">
                 <iframe></iframe>
-                <div id="form">
-                    <input id="to" value="rdwelsh@gmail.com" />
+                <div id="send-form">
+                    <input id="to" value="tryphontournesol71@gmail.com, richarddwelsh@yahoo.co.uk" />
                     <input id="subject" value="Test email" />
-                    <input type="submit" id="submit" value="Send" />
+                    <input type="submit" id="send-submit" value="Send" />
                 </div>
                 <div class="log"></div>
             </div>

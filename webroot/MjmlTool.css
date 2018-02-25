@@ -12,10 +12,15 @@ body {
     height: 600px;
 }
 
+#jsonEditor .editor {
+    height: 250px;
+}
+
 .errors, .log {
     padding: 0.3em 0.5em;
     font-family: monospace;
     margin-top: 15px;
+    margin-bottom: 20px;
     border-radius: 4px;
 }
 

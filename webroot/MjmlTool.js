@@ -1,4 +1,7 @@
-var mjmlEditor, htmlEditor, htmlPreview, errors, latestHtml;
+var mjmlEditor, jsonEditor, htmlEditor, htmlPreview, errors, latestHtml;
+
+var phpExpressionFinder = /\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(?:\[(?:'[a-z]+'|[0-9]+)\])*/g;
+var twigExpressionFinder = /{{[a-z9-9]+}}/g;
 
 $(document).ready(function() {
     mjmlEditor = ace.edit($("#mjmlEditor .editor")[0]);
@@ -6,19 +9,42 @@ $(document).ready(function() {
     mjmlEditor.session.setMode("ace/mode/xml");
     mjmlEditor.getSession().setUseWrapMode(true);
     mjmlEditor.commands.addCommand({
-        name: 'doTransform',
-        bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
-        exec: doTransform,
+            name: 'doTransform',
+            bindKey: {win: 'Ctrl-R',  mac: 'Command-R'}, // R for Run
+            exec: doTransform,
+            readOnly: true // false if this command should not apply in readOnly mode
+        });
+    mjmlEditor.commands.addCommand({
+            name: 'doSaveMjml',
+            bindKey: {win: 'Ctrl-S',  mac: 'Command-S'}, // S for Save
+            exec: function() { doSave("mjml") },
+            readOnly: true // false if this command should not apply in readOnly mode
+        })
+
+    jsonEditor = ace.edit($("#jsonEditor .editor")[0]);
+    jsonEditor.setTheme("ace/theme/twilight");
+    jsonEditor.session.setMode("ace/mode/json");
+    jsonEditor.getSession().setUseWrapMode(true);
+    jsonEditor.commands.addCommand({
+        name: 'doSaveJson',
+        bindKey: {win: 'Ctrl-S',  mac: 'Command-S'}, // S for Save
+        exec: function() { doSave("json") },
         readOnly: true // false if this command should not apply in readOnly mode
-    });
+    })
 
     htmlEditor = ace.edit($("#htmlEditor .editor")[0]);
     htmlEditor.setTheme("ace/theme/twilight");
     htmlEditor.session.setMode("ace/mode/html");
     htmlEditor.getSession().setUseWrapMode(true);
     htmlEditor.setReadOnly(true);
+    htmlEditor.commands.addCommand({
+        name: 'doSaveHtml',
+        bindKey: {win: 'Ctrl-S',  mac: 'Command-S'}, // S for Save
+        exec: function() { doSave("html") },
+        readOnly: true // false if this command should not apply in readOnly mode
+    })
 
-    $("#submit").on("click", function(){
+    $("#send-submit").on("click", function(){
         $.post({
             url: "/SendTest",
             data: {
@@ -35,20 +61,74 @@ $(document).ready(function() {
         })
     })
 
-    $.get("/HelloWorld.mjml", null, function(responseText) {
-        mjmlEditor.setValue(responseText);
-        mjmlEditor.gotoLine(1)
+    $("#load-submit").on("click", function (){
+        $.get("/MJML/" + $("#filename").val(), null, function(responseText) {
+            mjmlEditor.setValue(responseText);
+            mjmlEditor.gotoLine(1)
+        })
     })
+
+    $("#save-submit").on("click", function (){
+        doSave("mjml")
+    })
+
+    $.get("/MJML/placeholders.json", null, function(responseText) {
+        jsonEditor.setValue(responseText);
+        jsonEditor.gotoLine(1)
+        }, "text")
 
     htmlPreview = $("#htmlPreview iframe")
     errors = $("#mjmlEditor .errors")
     log = $("#htmlPreview .log")
 })
 
+function doSave(what) {
+    if (what == "mjml") {
+        $.ajax({
+            method: "PUT",
+            url: "/MJML/" + $("#filename").val(),
+            contentType: "text/plain",
+            data: mjmlEditor.getValue(),
+            success: function() {
+                alert ($("#filename").val() + " saved")
+            }
+        })
+    }
+    else if (what == "html") {
+        $.ajax({
+            method: "PUT",
+            url: "/MJML/" + $("#filename").val().replace("mjml", "html"),
+            contentType: "text/plain",
+            data: htmlEditor.getValue(),
+            success: function() {
+                alert ($("#filename").val().replace("mjml", "html") + " saved")
+            }
+        })
+    }
+    else if (what == "json") {
+        $.ajax({
+            method: "PUT",
+            url: "/MJML/placeholders.json",
+            contentType: "text/plain",
+            data: jsonEditor.getValue(),
+            success: function() {
+                alert ("rplaceholders.json saved")
+            }
+        })
+    }
+
+}
+
 function doTransform() {
+    // do placeholder substitutions first (in the browser)
+    var placeholders = eval("(" + jsonEditor.getValue() + ")"),
+        substitutedHtml = mjmlEditor.getValue()
+            .replace(phpExpressionFinder, function(match) { return placeholders["php_vars"][match] || match })
+            .replace(twigExpressionFinder, function(match) { return placeholders["twig_vars"][match] || match });
+
     $.post({
         url: "/Mjml2Html",
-        data: mjmlEditor.getValue(),
+        data: substitutedHtml,
         contentType: "text/xml",
         dataType: "json", // what is expected in return
         success: function(responseObj) {

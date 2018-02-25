@@ -5,7 +5,8 @@ var app = express();
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.text({type: "text/xml"})); // body-parser will treat incoming text/xml bodies as plain text
-app.use(bodyParser.urlencoded()); 
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.text({type: "text/plain"}));
 
 var mjml = require('mjml');
 
@@ -45,6 +46,7 @@ app.post('/Mjml2Html', function (req, res) {
 	res.send(resultingHtml);
 })
 
+// POST handler to send test emails
 app.post('/SendTest', function (req, res, next) {
 	var emailOut = req.body;
 	emailOut.from = "Dev <dev@welshdesign.co.uk>";
@@ -56,6 +58,13 @@ app.post('/SendTest', function (req, res, next) {
 		},
 		next
 	)
+})
+
+// PUT handler to save files
+app.put(/\/MJML\/(.+)/, function (req, res, next) {
+
+	fs.writeFileSync(staticRoot + '/MJML/' + req.params[0], req.body);
+	res.sendStatus(200);
 })
 
 app.use(function(req, res, next){
