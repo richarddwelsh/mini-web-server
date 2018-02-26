@@ -3,6 +3,8 @@
 var express = require('express');
 var app = express();
 
+var path = require('path');
+
 var bodyParser = require('body-parser');
 app.use(bodyParser.text({type: "text/xml"})); // body-parser will treat incoming text/xml bodies as plain text
 app.use(bodyParser.urlencoded());
@@ -11,12 +13,12 @@ app.use(bodyParser.text({type: "text/plain"}));
 var mjml = require('mjml');
 
 var nodemailer = require('nodemailer');
-var PASSWD_DIR = (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/.credentials/';
-var PASSWD_PATH = PASSWD_DIR + 'smtp_credentials.json';
+var PASSWD_DIR = path.resolve((process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE), '.credentials');
+var PASSWD_PATH = path.resolve(PASSWD_DIR, 'smtp_credentials.json');
 var fs = require('fs');
 var transporter = nodemailer.createTransport(JSON.parse(fs.readFileSync(PASSWD_PATH)));
 
-var staticRoot = __dirname + "/webroot"
+var staticRoot = path.resolve(__dirname, "webroot")
 var port = 8001
 
 var connectSSI = require('connect-ssi');
@@ -60,10 +62,16 @@ app.post('/SendTest', function (req, res, next) {
 	)
 })
 
+// GET handler to load files
+app.get(/\/MJML\/(.+)/, function (req, res, next) {
+	// not bothered about mime-type, etc.
+	res.send(fs.readFileSync(path.resolve(__dirname, '..', 'MJML', req.params[0])));
+})
+
 // PUT handler to save files
 app.put(/\/MJML\/(.+)/, function (req, res, next) {
 
-	fs.writeFileSync(staticRoot + '/MJML/' + req.params[0], req.body);
+	fs.writeFileSync(path.resolve(__dirname, '..', 'MJML', req.params[0]), req.body); // simple as...
 	res.sendStatus(200);
 })
 

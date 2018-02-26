@@ -83,39 +83,26 @@ $(document).ready(function() {
 })
 
 function doSave(what) {
-    if (what == "mjml") {
-        $.ajax({
-            method: "PUT",
-            url: "/MJML/" + $("#filename").val(),
-            contentType: "text/plain",
-            data: mjmlEditor.getValue(),
-            success: function() {
-                alert ($("#filename").val() + " saved")
-            }
-        })
+    var filenames = {
+        "mjml": "/MJML/" + $("#filename").val(),
+        "html": "/MJML/" + $("#filename").val().replace("mjml", "html"),
+        "json": "/MJML/placeholders.json"
     }
-    else if (what == "html") {
-        $.ajax({
-            method: "PUT",
-            url: "/MJML/" + $("#filename").val().replace("mjml", "html"),
-            contentType: "text/plain",
-            data: htmlEditor.getValue(),
-            success: function() {
-                alert ($("#filename").val().replace("mjml", "html") + " saved")
-            }
-        })
+    var codeWindow = {
+        "mjml": mjmlEditor,
+        "html": htmlEditor,
+        "json": jsonEditor
     }
-    else if (what == "json") {
-        $.ajax({
-            method: "PUT",
-            url: "/MJML/placeholders.json",
-            contentType: "text/plain",
-            data: jsonEditor.getValue(),
-            success: function() {
-                alert ("rplaceholders.json saved")
-            }
-        })
-    }
+
+    $.ajax({
+        method: "PUT",
+        url: filenames[what],
+        contentType: "text/plain",
+        data: codeWindow[what].getValue(),
+        success: function() {
+            alert (filenames[what] + " saved successfully")
+        }
+    })
 
 }
 
