@@ -26,6 +26,12 @@ $(document).ready(function() {
     jsonEditor.session.setMode("ace/mode/json");
     jsonEditor.getSession().setUseWrapMode(true);
     jsonEditor.commands.addCommand({
+        name: 'doTransform',
+        bindKey: {win: 'Ctrl-R',  mac: 'Command-R'}, // R for Run
+        exec: doTransform,
+        readOnly: true // false if this command should not apply in readOnly mode
+    });
+    jsonEditor.commands.addCommand({
         name: 'doSaveJson',
         bindKey: {win: 'Ctrl-S',  mac: 'Command-S'}, // S for Save
         exec: function() { doSave("json") },
