@@ -1,16 +1,19 @@
 /* global __dirname */
 
-var express = require('express');
-var app = express();
+const args = process.argv;
+const path = require('path');
+const express = require('express');
+const app = express();
 
-var connectSSI = require('connect-ssi');
+const staticRoot = path.join(__dirname, "..", args[2] || ".");
+
+const connectSSI = require('connect-ssi');
 app.use(connectSSI({
-	baseDir: __dirname + "/../public_html",
+	baseDir: path.join(__dirname, ".."),
 	ext: '.shtml'
 }))
 
-var staticRoot = __dirname + "/../public_html"
-var port = 8001
+const port = (Number(args[3])) ? Number(args[3]) : 8002;
 
 // respond with Custom message when a GET request is made to the homepage
 app.get('/', function (req, res) {
@@ -26,4 +29,4 @@ app.use(express.static(staticRoot));
 
 app.listen(port);
 
-console.log("Server running on port " + port + ", serving static files from " + staticRoot);
+console.log(`Server running on port ${port}, serving static files from ${staticRoot}`);
