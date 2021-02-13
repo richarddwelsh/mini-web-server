@@ -6,7 +6,8 @@ const express = require('express');
 const open = require('open');
 const app = express();
 
-const staticRoot = path.join(__dirname, "..", args[2] || ".");
+const staticRoot = args[2] == null ? path.join(__dirname, "..") :
+	path.isAbsolute(args[2]) ? args[2] : path.join(__dirname, "..", args[2] || ".");
 
 const connectSSI = require('connect-ssi');
 app.use(connectSSI({
