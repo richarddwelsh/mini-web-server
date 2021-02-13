@@ -3,6 +3,7 @@
 const args = process.argv;
 const path = require('path');
 const express = require('express');
+const open = require('open');
 const app = express();
 
 const staticRoot = path.join(__dirname, "..", args[2] || ".");
@@ -17,7 +18,7 @@ const port = (Number(args[3])) ? Number(args[3]) : 8002;
 
 // respond with Custom message when a GET request is made to the homepage
 app.get('/', function (req, res) {
-  res.send('Serving from' + staticRoot)
+  res.send(`Serving from ${staticRoot}`)
 })
 
 app.use(function(req, res, next){
@@ -30,3 +31,5 @@ app.use(express.static(staticRoot));
 app.listen(port);
 
 console.log(`Server running on port ${port}, serving static files from ${staticRoot}`);
+
+open(`http://localhost:${port}`);

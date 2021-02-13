@@ -4,12 +4,14 @@
   "description": "Mini web server",
   "main": "main.js",
   "scripts": {
+    "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Richard Welsh",
   "license": "ISC",
   "dependencies": {
     "connect-ssi": "^1.1.1",
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "open": "^7.4.0"
   }
 }
