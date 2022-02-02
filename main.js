@@ -6,6 +6,10 @@ const express = require('express');
 const open = require('open');
 const app = express();
 
+// args[0] will be path to node.js
+// args[1] will be path to this file
+
+// args[2] (optional) root path to serve from
 const staticRoot = args[2] == null ? path.join(__dirname, "..") :
 	path.isAbsolute(args[2]) ? args[2] : path.join(__dirname, "..", args[2] || ".");
 
@@ -15,6 +19,7 @@ app.use(connectSSI({
 	ext: '.shtml'
 }))
 
+// args[3] (optional) port to serve from
 const port = (Number(args[3])) ? Number(args[3]) : 8002;
 
 // respond with Custom message when a GET request is made to the homepage
@@ -33,4 +38,7 @@ app.listen(port);
 
 console.log(`Server running on port ${port}, serving static files from ${staticRoot}`);
 
-open(`http://localhost:${port}`);
+// args[4] (optional) root-relative path to open in browser
+const initUrl = args[4] || 'Index.html';
+
+open(`http://localhost:${port}/${initUrl}`);
