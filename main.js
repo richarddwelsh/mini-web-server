@@ -5,6 +5,7 @@ const path = require('path');
 const express = require('express');
 const open = require('open');
 const app = express();
+const bodyParser = require('body-parser');
 
 // args[0] will be path to node.js
 // args[1] will be path to this file
@@ -19,6 +20,10 @@ app.use(connectSSI({
 	ext: '.shtml'
 }))
 
+app.use(bodyParser.urlencoded({ type: '*/x-www-form-urlencoded' }));
+app.use(bodyParser.json({ type: 'application/json' }));
+app.use(bodyParser.text({ type: '*/*' }))
+
 // args[3] (optional) port to serve from
 const port = (Number(args[3])) ? Number(args[3]) : 8002;
 
@@ -26,6 +31,13 @@ const port = (Number(args[3])) ? Number(args[3]) : 8002;
 app.get('/', function (req, res) {
   res.send(`Serving from ${staticRoot}`)
 })
+
+app.post(/.*/, function(req, res, next){
+	console.log('────────────────────────────────────────────────────────');
+	console.log('%s %s %s', req.method, req.baseUrl + req.url, req.headers['content-type']);
+	console.log(JSON.stringify(req.body));
+	res.send(`<table><tr><td>Method</td><td>${req.method}</td></tr><tr><td>URL</td><td>${req.baseUrl + req.url}</td></tr><tr><td>Content-type</td><td>${req.headers['content-type']}</td></tr><tr><td>Body (parsed)</td><td>${JSON.stringify(req.body)}</td></tr></table>`)
+});
 
 app.use(function(req, res, next){
 	console.log('%s %s', req.method, req.url);
