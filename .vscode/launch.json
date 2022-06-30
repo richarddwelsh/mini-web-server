@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Start mini web server",
             "program": "${workspaceRoot}/main.js",
-            "args": [".", "8080"],
+            "args": [".", "8002"],
             "stopOnEntry": false,
             "cwd": "${workspaceRoot}"
         },
